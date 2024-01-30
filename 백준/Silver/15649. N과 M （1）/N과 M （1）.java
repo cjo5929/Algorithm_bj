@@ -6,7 +6,7 @@
  * @input (1 ≤ M ≤ N ≤ 8) => 입력 값에 대한 시간은 생각 안 해도됨
  * @output => 사전 순을 증가하는 순서로 int 값 출력, 각 수열은 공백 구분
  * @time_complex  O(n!)
- * @perf 38340kb 528ms
+ * @perf 35284	328
  */
 
 import java.io.BufferedReader;
