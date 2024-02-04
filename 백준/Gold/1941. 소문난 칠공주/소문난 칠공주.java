@@ -13,8 +13,8 @@ import java.util.Deque;
  *                   7자리를 찾는 것 이기 때문에 순서가 무의미 한 조합으로 7개를 뽑고 그 이후에 조건 판단하자
  * @input 5 x 5 행렬이 주어짐
  * @output 경우의 수 출력 -> 출력 값 int
- * @time_complex
- * @perf 16812 144
+ * @time_complex O(2^25)
+ * @perf 73728 480
  */
 
 public class Main {
@@ -41,12 +41,15 @@ public class Main {
 		arrY = new int[25];
 		
 		
+//		좌표 생성 => 0 ~ 24 를 2차원 배열 좌표로
 		for(int i = 0; i < 25; i++) {
 			arrX[i] = i / 5;
 			arrY[i] = i % 5;
 		}
 
 		result = 0;
+		
+//		조합 생성 => 0 ~ 24 숫자 중 7가지 뽑기
 		combination(new int[7], 0, 0);
 		
 		sb.append(result);
@@ -78,14 +81,18 @@ public class Main {
 		int leng = 1;
 		int cnt = 0;
 		
+		
+
 		while(!q.isEmpty()) {
 			int temp = q.poll();
 			
+//			S 카운트
 			if(arr[arrX[temp]][arrY[temp]] == 'S') cnt++;
 			
 			for(int i = 0; i < 4; i++) {
 				for(int j = 1; j < 7; j++) {
 					
+//					1. 뽑힌 7개 숫자가 연결 된 좌표에 있는지
 					if(arrX[temp] + dx[i] == arrX[comb[j]] && arrY[temp] + dy[i] ==  arrY[comb[j]] && !visitied[j]) {
 						leng++;
 						visitied[j] = true;
@@ -98,6 +105,7 @@ public class Main {
 			
 		}
 		
+//		7개가 인접하고 S가 4개 이상일 때
 		if(leng == 7 && cnt >= 4) {
 			result++;
 		}
