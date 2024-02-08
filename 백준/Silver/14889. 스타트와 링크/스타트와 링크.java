@@ -63,7 +63,14 @@ public class Main {
 			}
 		}
 		
+
+		
 		result = Math.min(result, Math.abs(start - link));
+		
+		if (result == 0) {
+			System.out.println(result);
+			System.exit(0);
+		}
 	}
 
 }
