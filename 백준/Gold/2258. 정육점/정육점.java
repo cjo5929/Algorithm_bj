@@ -51,10 +51,10 @@ public class Main {
 
 			@Override
 			public int compare(Node o1, Node o2) {
-				if (o1.price == o2.price) {
+				if (o1.price == o2.price) {  //가격이 같으면 무게 내림차순 
 					return o2.weight - o1.weight;
 				}
-				return o1.price - o2.price;
+				return o1.price - o2.price;  // 가격 오름차순 
 
 			}
 		});
