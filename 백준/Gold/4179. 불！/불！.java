@@ -1,91 +1,134 @@
-import java.io.*;
-import java.util.*;
+import java.awt.Point;
+
+/**
+ * @author 
+ * @date 
+ * @link
+ * @keyword_solution  
+ * @input 
+ * @output   
+ * @time_complex  
+ * @perf 
+ */
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
+	static StringBuilder sb = new StringBuilder();
+	static int R, C, jihun_x, jihun_y, fire_x, fire_y, result, size;
+	static char[][] arr;
+	static int[] dx = { 1, -1, 0, 0 };
+	static int[] dy = { 0, 0, 1, -1 };
+	static Queue<Point> fire_q = new ArrayDeque<>();
+	static Queue<Point> jihun_q = new ArrayDeque<>();
+	static boolean possible;
+	static boolean[][] visited;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int R = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
 
-        char[][] map = new char[R][C];
+	public static void main(String[] args) throws IOException {
 
-        Queue<int[]> jihun = new LinkedList<>();
-        Queue<int[]> fire = new LinkedList<>();
-        boolean[][] visit = new boolean[R][C];
+		st = new StringTokenizer(br.readLine());
+
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+
+		arr = new char[R][C];
+		visited = new boolean[R][C];
 
         for (int i = 0; i < R; i++) {
-            map[i] = br.readLine().toCharArray();
+            arr[i] = br.readLine().toCharArray();
 
             for (int j = 0; j < C; j++) {
-                if (map[i][j] == 'J') {
-                    jihun.add(new int[] { i, j });
-                    map[i][j] = '.';
-                    visit[i][j] = true;
-                } else if (map[i][j] == 'F') {
-                    fire.add(new int[] { i, j });
+                if (arr[i][j] == 'J') {
+                	jihun_q.offer(new Point(i, j));
+                    visited[i][j] = true;
+                } else if (arr[i][j] == 'F') {
+                	fire_q.offer(new Point(i, j));
                 }
             }
         }
 
-        int[][] move = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+		bfs();
 
+	}
 
-        int count = 0;
-        loop: while (true) {
+	static void bfs() {
+		int ax = 0;
+		int ay = 0;
+		int x = 0;
+		int y = 0;
 
-            count++;
+//		이동
+		while (true) {
+			size = fire_q.size();
+			result++;
+//			불 q
+			while (size-- > 0) {
+				Point cur = fire_q.poll();
+				x = cur.x;
+				y = cur.y;
 
-            int size = fire.size();
+				for (int i = 0; i < 4; i++) {
+					ax = x + dx[i];
+					ay = y + dy[i];
 
-            while (size-- > 0) {
-                int[] f = fire.poll();
-
-                for (int i = 0; i < 4; i++) {
-                    int nr = f[0] + move[i][0];
-                    int nc = f[1] + move[i][1];
-
-                    if (nr < 0 || nr >= R || nc < 0 || nc >= C || map[nr][nc] != '.') {
+                    if (ax < 0 || ax >= R || ay < 0 || ay >= C || arr[ax][ay] != '.') {
                         continue;
                     }
+                    
+                    arr[ax][ay] = 'F';
+                    fire_q.add(new Point(ax, ay));
+				}
 
-                    map[nr][nc] = 'F';
-                    fire.add(new int[] { nr, nc });
-                }
-            }
+			}
 
-            size = jihun.size();
-            while (size-- > 0) {
-                int[] j = jihun.poll();
+//			지훈이 q
+			size = jihun_q.size();
 
-                for (int i = 0; i < 4; i++) {
-                    int nr = j[0] + move[i][0];
-                    int nc = j[1] + move[i][1];
+			while (size-- > 0) {
+				Point cur = jihun_q.poll();
+				x = cur.x;
+				y = cur.y;
 
-                    if (nr < 0 || nr >= R || nc < 0 || nc >= C) {
-                        System.out.println(count);
-                        break loop;
+				for (int i = 0; i < 4; i++) {
+					ax = x + dx[i];
+					ay = y + dy[i];
+
+                    if (ax < 0 || ax >= R || ay < 0 || ay >= C) {
+                        System.out.println(result);
+                        return;
                     }
 
-                    if (visit[nr][nc] || map[nr][nc] != '.') {
-                        continue;
-                    }
+					if (visited[ax][ay] || arr[ax][ay] != '.')
+						continue;
 
-                    visit[nr][nc] = true;
-                    jihun.add(new int[] { nr, nc });
+					visited[ax][ay] = true;
+					jihun_q.add(new Point(ax, ay));
 
-                }
-            }
+				}
 
-            if (jihun.isEmpty()) {
+			}
+
+            if (jihun_q.isEmpty()) {
                 System.out.println("IMPOSSIBLE");
                 break;
             }
 
-        }
+		}
 
-    }
+	}
+
+//	static boolean check(int x, int y) {
+//		return (x >= 0 && x < R && y >= 0 && y < C);
+//	}
+
 }
