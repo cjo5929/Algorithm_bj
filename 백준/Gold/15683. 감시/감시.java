@@ -1,5 +1,4 @@
 /**
- * 다시 풀어볼 문제
  * @author 강민서
  * @date 2024.02.21
  * @link https://www.acmicpc.net/problem/15683
@@ -65,7 +64,7 @@ public class Main {
 		dfs(0, arr);
 		System.out.println(result);
 	}
-	static void dfs(int depth, int[][] map) {
+	static void dfs(int depth, int[][] map) { // depth => cctv 갯수 마다 다 돌리기 위해, map 배열 => 각각의 cctv가 감시하는 영역을 표시해서 같이 넘겨줌 
 		
 		if(depth == list.size()) {
 			int cnt = count(map);
@@ -79,6 +78,9 @@ public class Main {
 		int y = list.get(depth).y;
 		
 		for(int i = 0; i < mode[type].length; i++) {
+			
+//			모든 방향을 탐색하기 때문에 copy_map 따로 저장
+//			배열은 deepcopy 하지 않으면 값이 같이 변경
 			int[][] copy_map = new int[N][M];
 			
 			for(int k = 0; k < N; k++) {
@@ -94,14 +96,14 @@ public class Main {
 				while(true) {
 					if(!check(ax, ay) || arr[ax][ay] == 6) break;
 					
-					copy_map[ax][ay] = -1;
+					copy_map[ax][ay] = -1; //cctv 위치는 list에 담아둬서 그냥 -1로
 					
 					ax += dx[dir];
 					ay += dy[dir];
 				}
 			}
 			
-			dfs(depth + 1, copy_map);
+			dfs(depth + 1, copy_map); // 재귀로 모든 경우의 수 조합
 		}
 		
 	}
@@ -110,6 +112,7 @@ public class Main {
 		return (ax >= 0 && ax < N && ay >= 0 && ay < M);
 	}
 	
+//	0의 개수 세기
 	static int count(int [][] copy_map) {
 		int cnt = 0;
 		for(int i = 0; i < N; i++) {
