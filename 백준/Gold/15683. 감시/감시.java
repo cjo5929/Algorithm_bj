@@ -22,13 +22,12 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
-	public static int[] dx = {-1, 1, 0, 0};
-	public static int[] dy = {0, 0, -1, 1};
-	
-	public static int[][][] mode = {{{0}}, {{0}, {1}, {2}, {3}}, {{2, 3}, {0, 1}},
-			{{0, 3}, {1, 3}, {1, 2}, {0, 2}},
-			{{0, 2, 3}, {0, 1, 3}, {1, 2, 3}, {0, 1, 2}},
-			{{0, 1, 2, 3}}};
+	public static int[] dx = { -1, 1, 0, 0 };
+	public static int[] dy = { 0, 0, -1, 1 };
+
+	public static int[][][] mode = { { { 0 } }, { { 0 }, { 1 }, { 2 }, { 3 } }, { { 2, 3 }, { 0, 1 } },
+			{ { 0, 3 }, { 1, 3 }, { 1, 2 }, { 0, 2 } }, { { 0, 2, 3 }, { 0, 1, 3 }, { 1, 2, 3 }, { 0, 1, 2 } },
+			{ { 0, 1, 2, 3 } } };
 
 	static int N, M, result, zero;
 	static int[][] arr;
@@ -65,62 +64,62 @@ public class Main {
 		result = zero;
 		dfs(0, arr);
 		System.out.println(result);
-
 	}
-
 	static void dfs(int depth, int[][] map) {
-		if (depth == list.size()) {
-			int cnt = 0;
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < M; j++) {
-					if (map[i][j] == 0) {
-						cnt++;
-					}
-				}
-			}
+		
+		if(depth == list.size()) {
+			int cnt = count(map);
 			
 			result = Math.min(result, cnt);
 			return;
 		}
-
+		
 		int type = list.get(depth).type;
 		int x = list.get(depth).x;
 		int y = list.get(depth).y;
-
-		for (int i = 0; i < mode[type].length; i++) {
-			int[][] copy = new int[N][M];
-
-			for (int k = 0; k < N; k++) {
-				copy[k] = Arrays.copyOf(map[k], M);
+		
+		for(int i = 0; i < mode[type].length; i++) {
+			int[][] copy_map = new int[N][M];
+			
+			for(int k = 0; k < N; k++) {
+				copy_map[k] = Arrays.copyOf(map[k], M);
 			}
-
-			for (int j = 0; j < mode[type][i].length; j++) {
+			
+			for(int j = 0; j < mode[type][i].length; j++) {
 				int dir = mode[type][i][j];
-
+				
 				int ax = x + dx[dir];
 				int ay = y + dy[dir];
-
-				while (true) {
-					if (!check(ax, ay))
-						break;
-
-					if (copy[ax][ay] == 6)
-						break;
-
-					copy[ax][ay] = -1;
+				
+				while(true) {
+					if(!check(ax, ay) || arr[ax][ay] == 6) break;
+					
+					copy_map[ax][ay] = -1;
+					
 					ax += dx[dir];
 					ay += dy[dir];
 				}
-
 			}
-
-			dfs(depth + 1, copy);
-
+			
+			dfs(depth + 1, copy_map);
 		}
+		
 	}
-
+	
 	static boolean check(int ax, int ay) {
 		return (ax >= 0 && ax < N && ay >= 0 && ay < M);
+	}
+	
+	static int count(int [][] copy_map) {
+		int cnt = 0;
+		for(int i = 0; i < N; i++) {
+			for(int j = 0; j < M; j++) {
+				if(copy_map[i][j] == 0) cnt++;
+			}
+		}
+		
+		return cnt;
+		
 	}
 
 }
