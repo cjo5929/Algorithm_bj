@@ -12,6 +12,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -38,12 +39,13 @@ public class Main {
 			}
 
 		}
-		// 4번타자는 고정
-		lineUP[3] = 0; // 4번 타자는 1번 선수
+
+		lineUP[3] = 0;
 		visited[3] = true;
 
 		permu(1);
-		System.out.println(score);
+		sb.append(score);
+		System.out.println(sb);
 
 	}
 
@@ -52,6 +54,7 @@ public class Main {
 		if (depth == 9) {
 
 			score = Math.max(score, gameStart());
+
 			return;
 		}
 
@@ -64,107 +67,49 @@ public class Main {
 			}
 
 		}
-
 	}
 
 	static int gameStart() {
 		int sum = 0; // 점수 합산
-		int current = 0; // 시작 선수
+		int current_player = 0; // 시작 선수
 
-		for (int r = 0; r < N; r++) {
-			int score = 0; // 이닝 점수
-			out = 0; // 이닝마다 아웃 초기화
-			boolean[] base = new boolean[4]; // 이닝마다 base초기화
-
+		for (int i = 0; i < N; i++) {
+			int cnt = 1; // 타자는 1로 고정 
+			out = 0;
+			
 //			3아웃 이닝 교체
-			while (out < 3) {
-
-				switch (arr[r][lineUP[current]]) {
-
-//				아웃
-				case 0:
-					out++;
-					break;
-
-//				1루타
-				case 1:
-					if (base[3]) {
-						score++;
-						base[3] = false;
-					}
-					if (base[2]) {
-						base[3] = true;
-						base[2] = false;
-					}
-					if (base[1]) {
-						base[2] = true;
-					}
-					base[1] = true;
-					break;
-
-				// 2루타
-				case 2:
-					if (base[3]) {
-						score++;
-						base[3] = false;
-					}
-					if (base[2]) {
-						score++;
-					}
-					if (base[1]) {
-						base[3] = true;
-						base[1] = false;
-					}
-					base[2] = true;
-					break;
-
-				// 3루타
-				case 3:
-					if (base[3]) {
-						score++;
-					}
-					if (base[2]) {
-						score++;
-						base[2] = false;
-					}
-					if (base[1]) {
-						score++;
-						base[1] = false;
-					}
-					base[3] = true;
-					break;
-
-				// 홈런
-				case 4:
-					if (base[3]) {
-						score++;
-						base[3] = false;
-					}
-					if (base[2]) {
-						score++;
-						base[2] = false;
-					}
-					if (base[1]) {
-						score++;
-						base[1] = false;
-					}
-					score++;
-					break;
+			while(out < 3) {
+				int result = arr[i][lineUP[current_player]];
+				
+				if(result == 0) out++;
+				else {
+					cnt = cnt << result;  // 1루타 => 1칸 밀기, 2루타 => 2칸 밀기, 3루타 => 3칸 밀기
+					cnt = cnt | 1;        // 타자 다시 입력
 				}
-
-				current++; // 다음 타자
+				
+				if(cnt > 15) {
+					for(int k = 1 << 4; k < 256; k <<= 1) {
+						if((cnt & k) == 0) continue;
+						cnt ^= k;
+						sum++;
+					}
+				}
+				
+				
+				
+				
 
 //				타자 순번 다 돌면 0으로 초기화
-				if (current >= 9) {
-					current = 0;
-				}
+				if (++current_player >= 9) {
+					current_player = 0;
+				}	
 			}
+			
 
-			sum += score; // 이닝 점수 합신
+	
 
 		}
 
 		return sum;
 	}
-
 }
