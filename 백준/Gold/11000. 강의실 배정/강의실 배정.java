@@ -49,15 +49,21 @@ public class Main {
 			arr[i] = new Lesson(s, e);
 		}
 		
-		Arrays.sort(arr);
+//		시작시간을 기준으로 정렬, 같다면 종료시간 오름차순
+		Arrays.sort(arr);  
+		
+		
+//		끝나는 시간만 넣어서 오름차순 정렬
 		q.offer(arr[0].end);
 
 		for(int i = 1; i < N; i++) {
 			
+//			가능한 수업이라면 q에서 poll
 			if(q.peek() <= arr[i].start) {
 				q.poll();
 			}
 			
+//			새롭게 갱신
 			q.offer(arr[i].end);
 		}
 		
