@@ -12,15 +12,13 @@ public class Main {
 	static StringBuilder sb = new StringBuilder();
 	static int N, cnt, index, ax, ay;
 	static int[][] arr;
-	static int[][] result = { { 0, 1 }, { 1, 1 }, { 1, 0 } };
-	static int[] width = { 0, 1 };
-	static int[] diagonal = { 1, 1 };
-	static int[] height = { 1, 0 };
+	static int[][][] dp;
 
 	public static void main(String[] args) throws IOException {
 
 		N = Integer.parseInt(br.readLine());
 		arr = new int[N][N];
+		dp = new int[N][N][3];
 
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -29,91 +27,30 @@ public class Main {
 
 			}
 		}
+//		0  가로 1 세로 2 대각선
+		dp[0][1][0] = 1;
+		for (int i = 0; i < N; i++) {
+			for (int j = 2; j < N; j++) {
+//				가로
+				if (j - 1 >= 0 && arr[i][j] == 0) {
+					dp[i][j][0] = dp[i][j - 1][0] + dp[i][j - 1][2];
+				}
 
-		dfs(0, 1, 0);
-		System.out.println(cnt);
-		
-	}
+//				세로
+				if (i - 1 >= 0 && arr[i][j] == 0) {
+					dp[i][j][1] = dp[i - 1][j][1] + dp[i - 1][j][2];
+				}
 
-	static void dfs(int x, int y, int dist) {
-		if (x == N - 1 && y == N - 1) {
-			cnt++;
-			return;
+//				대각
+				if (j - 1 >= 0 && i - 1 >= 0 && arr[i][j] == 0 && arr[i - 1][j] == 0 && arr[i][j - 1] == 0) {
+					dp[i][j][2] = dp[i - 1][j - 1][1] + dp[i - 1][j - 1][0] + dp[i - 1][j - 1][2];
+				}
+			}
 		}
-
-		switch (dist) {
-		case 0:
-			ax = x + result[0][0];
-			ay = y + result[0][1];
-			
-			
-			
-			if (check(ax, ay) && arr[ax][ay] == 0) {
-				dfs(ax, ay, 0);
-			}
-
-			ax = x + result[1][0];
-			ay = y + result[1][1];
-
-			if (check(ax, ay) && diagonalCheck(ax, ay)) {
-				dfs(ax, ay, 1);
-			}
-
-			break;
-
-		case 1:
-			ax = x + result[0][0];
-			ay = y + result[0][1];
-			
-			
-
-			if (check(ax, ay) && arr[ax][ay] == 0) {
-				dfs(ax, ay, 0);
-			}
-
-			ax = x + result[1][0];
-			ay = y + result[1][1];
-
-			if (check(ax, ay) && diagonalCheck(ax, ay)) {
-				dfs(ax, ay, 1);
-			}
-
-			ax = x + result[2][0];
-			ay = y + result[2][1];
-
-			if (check(ax, ay) && arr[ax][ay] == 0) {
-				dfs(ax, ay, 2);
-			}
-
-			break;
-
-		case 2:
-			ax = x + result[2][0];
-			ay = y + result[2][1];
-
-			if (check(ax, ay) && arr[ax][ay] == 0) {
-				dfs(ax, ay, 2);
-			}
-
-			ax = x + result[1][0];
-			ay = y + result[1][1];
-
-			if (check(ax, ay) && diagonalCheck(ax, ay)) {
-				dfs(ax, ay, 1);
-			}
-
-			break;
-			
-		
-		}
-
-	}
-
-	static boolean check(int ax, int ay) {
-		return ax >= 0 && ax < N && ay >= 0 && ay < N;
-	}
 	
-	static boolean diagonalCheck(int ax, int ay) {
-		return arr[ax - 1][ay] == 0 && arr[ax][ay - 1] == 0 && arr[ax][ay] == 0;
+		
+		System.out.println(dp[N-1][N-1][0] + dp[N-1][N-1][1] + dp[N-1][N-1][2]);
+
 	}
+
 }
