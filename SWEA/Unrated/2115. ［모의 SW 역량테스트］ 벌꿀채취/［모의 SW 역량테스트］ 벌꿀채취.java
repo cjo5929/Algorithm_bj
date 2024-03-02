@@ -52,7 +52,7 @@ public class Solution {
 		System.out.println(sb);
 	}
 
-//	벌꿀 채집 조합
+//	벌꿀 채집 조합 => N = 4 일 때, 0 ~ 15 index 조합을 다 구함
 	static void comb(int depth, int start) {
 		if (depth == 2) {
 
@@ -62,7 +62,7 @@ public class Solution {
 			if (honey[1] / N != (honey[1] + (M - 1)) / N)
 				return;
 
-//			같은 행에서 겹칠 경우
+//			같은 행에서 겹칠 경우 => 시작 인덱스부터 M까지 라고 했을 때 A채집과 B채집이 겹치면 안 됨
 			if (honey[0] + (M - 1) >= honey[1])
 				return;
 
@@ -79,7 +79,7 @@ public class Solution {
 
 	}
 
-//	벌꿀 수익 계산
+//	벌꿀 수익 계산 => 채집 가능한 꿀의 양을 list에 담기
 	static int honey_calc(int A_start, int B_start) {
 		ArrayList<Integer> list = new ArrayList<>();
 //		A
@@ -89,8 +89,9 @@ public class Solution {
 		for (int j = j_start; j < j_start + M; j++) {
 			list.add(arr[i_start][j]);
 		}
-
-		int A_sum = calc(list);
+		power_result = Integer.MIN_VALUE;
+		honey_power(new boolean[list.size()], 0, list);
+		int A_sum = power_result;
 
 		list.clear();
 //		B
@@ -101,48 +102,33 @@ public class Solution {
 			list.add(arr[i_start][j]);
 		}
 
-		int B_sum = calc(list);
+		power_result = Integer.MIN_VALUE;
+		honey_power(new boolean[list.size()], 0, list);
+		int B_sum = power_result;
 
 		return A_sum + B_sum;
 	}
 
-//	수익 계산
-	static int calc(ArrayList<Integer> list) {
-
-		power_result = Integer.MIN_VALUE;
-
-		Collections.sort(list, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return Integer.compare(o1, o2) * -1;
-			}
-		});
-		
-
-		honey_power(new boolean[list.size()], 0, list);	
-		
-		return power_result;
-	}
-	
-//	최대 수익 계산
+//	최대 수익 계산 => C보다 작은 부분집합을 다 구하고 전체 sum 중 큰 값 리턴 
 	static void honey_power(boolean[] checked, int depth, ArrayList<Integer> list) {
-		
-		if(depth == list.size()) {
+
+		if (depth == list.size()) {
 			int sum = 0;
 			int all_sum = 0;
-			for(int i = 0; i < list.size(); i++) {
-				if(checked[i]) {
+			for (int i = 0; i < list.size(); i++) {
+				if (checked[i]) {
 					all_sum += list.get(i);
-					if(all_sum > C)return;
+					if (all_sum > C)
+						return;
 					sum += (list.get(i) * list.get(i));
 				}
 			}
-			
+
 			power_result = Math.max(sum, power_result);
-			
+
 			return;
 		}
-		
+
 		checked[depth] = true;
 		honey_power(checked, depth + 1, list);
 		checked[depth] = false;
