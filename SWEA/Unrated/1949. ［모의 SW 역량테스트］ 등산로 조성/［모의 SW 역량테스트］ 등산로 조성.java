@@ -51,6 +51,7 @@ public class Solution {
 				}
 			}
 
+//			젤 높은 봉우리에서 시작
 			for (Point start : start_list) {
 
 				visited[start.x][start.y] = true;
@@ -72,11 +73,14 @@ public class Solution {
 
 			if (!check(ax, ay))
 				continue;
+			
+//			다음 봉우리가 더 낮으면 내려 갈 수 있음 => 이동
 			if (arr[ax][ay] < arr[x][y]) {
 				visited[ax][ay] = true;
 				dfs(ax, ay, len + 1, flag);
 				visited[ax][ay] = false;
 
+//			깍을 수 있다면 flag true => k번 만큼 반복문 돌기 (1씩 깎으며서 모든 경우의 수 확인)
 			} else if (flag) {
 				for (int k = 1; k <= K; k++) {
 					if (arr[ax][ay] - k < arr[x][y]) {
