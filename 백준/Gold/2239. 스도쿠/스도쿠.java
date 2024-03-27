@@ -1,21 +1,20 @@
 import java.awt.Point;
 
 /**
- * @author 
- * @date 
- * @link
- * @keyword_solution  
- * @input 
- * @output   
- * @time_complex  
- * @perf 
+ * @author 강민서
+ * @date 2024.03.27
+ * @link https://www.acmicpc.net/problem/2239
+ * @keyword_solution 스도쿠 게임
+ * @input 9개의 줄에 9개의 숫자로 보드가 입력
+ * @output 스도쿠 출력 
+ * @time_complex  135148 560
+ * @perf N!
  */
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -25,6 +24,7 @@ public class Main {
 	static StringBuilder sb = new StringBuilder();
 	static int[][] arr;
 	static ArrayList<Point> list = new ArrayList<>();
+	static boolean[] sudoNum;
 	
 	public static void main(String[] args) throws IOException {
 
