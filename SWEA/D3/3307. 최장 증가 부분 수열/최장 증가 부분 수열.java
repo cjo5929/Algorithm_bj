@@ -20,39 +20,59 @@ public class Solution {
 			sb.append("#" + test_case + " ");
 			
 			N = Integer.parseInt(br.readLine());
-			arr = new int[N + 1];
-			dp = new int[N + 1];
+			arr = new int[N];
+			dp = new int[N];
 			result = 0;
 			 
 			st = new StringTokenizer(br.readLine());
 			
-			for(int i = 1; i < N + 1; i++) {
+			for(int i = 0; i < N; i++) {
 				arr[i] = Integer.parseInt(st.nextToken());
 			}
-			
-			for(int i = 1; i < N + 1; i++) {
-				dp[i] = 1;
+			for(int i = 0; i < N; i++) {
 				
-				for(int j = 1; j < i; j++) {
+				int idx = binarySearch(arr[i], 0, result, result + 1);
+								
+				if(idx == -1) {
+					dp[result++] = arr[i];
 					
-					if (arr[i] > arr[j] && dp[i] < dp[j] + 1) {
-						dp[i] = dp[j] + 1;
-					}
-					
-					
-					
+				}else {
+					dp[idx] = arr[i];
 				}
 				
-				result = Math.max(dp[i], result);
 			}
-			
-						
+
 			
 			sb.append(result + "\n");
-			
+
 			
 		}
 		System.out.println(sb);
+		
+	}
+	
+	static int binarySearch(int num, int start, int end, int size) {
+		int search = 0;
+		
+		while(start <= end) {
+			int mid = (start + end) / 2;
+			
+			if(num <= dp[mid]) {
+				search = mid;
+				end = mid - 1;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		
+//		가장 큼
+		if(start == size) {
+			return -1;
+		}else {
+			return search;
+		}
+		
 		
 	}
 
