@@ -3,19 +3,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
- * @author 
- * @date 
- * @link
- * @keyword_solution  
- * @input 
- * @output   
- * @time_complex  
- * @perf 
+ * @author 강민서
+ * @date 2024.03.28
+ * @link https://www.acmicpc.net/problem/3055
+ * @keyword_solution  고슴도치, 물 두개의 bfs를 돌려야함, 물은 네 방향으로 동시에 퍼져야 하고, 고슴도치가 굴로 가는 최소 시간이기 때문에 bfs 사용 
+ * @input 50보다 작거나 같은 자연수 R과 C  => 완탐 가능 
+ * @output 가장 빠른 시간 출력, 불가능하면 "KAKTUS"를 출력
+ * @time_complex  11824	88
+ * @perf O(R * C)
  */
 
 public class Main {
