@@ -1,25 +1,32 @@
+import sys
 import heapq
+
+def bfs():
+
+    while q:
+        cur = heapq.heappop(q)
+
+        print(cur, end=" ")
+
+        for i in maps[cur]:
+            degree[i] -= 1
+            if degree[i] == 0:
+                heapq.heappush(q, i)
+
+
 n, m = map(int, input().split())
-graph = [[] for _ in range(n+1)]
-inDegree = [0 for _ in range(n+1)]
-heap = []
-result = []
+
+maps = [[0] for _ in range(n + 1)]
+degree = [0 for _ in range(n + 1)]
+q = []
 
 for _ in range(m):
-    x, y = map(int, input().split())
-    graph[x].append(y)
-    inDegree[y] += 1
+    a, b = map(int, input().split())
+    maps[a].append(b)
+    degree[b] += 1
 
-for i in range(1, n+1):
-    if inDegree[i] == 0:
-        heapq.heappush(heap, i)
-        
-while heap:
-    temp = heapq.heappop(heap)
-    result.append(temp)
-    for i in graph[temp]:
-        inDegree[i] -= 1
-        if inDegree[i] == 0:
-            heapq.heappush(heap, i)
-        
-print(" ".join(map(str, result)))
+for i in range(1, n + 1):
+    if degree[i] == 0:
+        heapq.heappush(q, i)
+
+bfs()
