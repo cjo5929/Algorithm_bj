@@ -34,14 +34,13 @@ for _ in range(n):
         y = ay
 
 
-    for i in range(1, m):
-        for j in range(1, m):
-            maps[i][j] = max(maps[i - 1][j - 1], maps[i - 1][j], maps[i][j - 1])
-
-
 
 for i in range(m):
     for j in range(m):
+
+        if i  > 0 and j > 0:
+            maps[i][j] = maps[i - 1][j]
+
         print(maps[i][j], end=" ")
 
     print()
