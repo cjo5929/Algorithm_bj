@@ -10,8 +10,7 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
 	static StringTokenizer st;
-	static int[] dx = { -1, 1, 0, 0 };
-	static int[] dy = { 0, 0, -1, 1 };
+	static int[] dist = { 1, -1, 3, -3 };
 	static ArrayDeque<String> q;
 	static Map<String, Integer> map = new HashMap<>();
 	static String answer = "123456780";
@@ -28,7 +27,7 @@ public class Main {
 
 		}
 		map.put(str, 0);
-
+		
 		if (str.equals(answer)) {
 			System.out.println(0);
 
@@ -46,21 +45,17 @@ public class Main {
 			String cur = q.poll();
 			int idx = cur.indexOf('0');
 			int cnt = map.get(cur);
-			int px = idx % 3;
-			int py = idx / 3;
-
+			
 			if (cur.equals(answer)) {
 				return cnt;
 			}
 
 			for (int i = 0; i < 4; i++) {
-				int nx = px + dx[i];
-				int ny = py + dy[i];
-
-				if (check(nx, ny)) {
-					int nPos = ny * 3 + nx;
+				int dx = idx + dist[i];
+				if (check(idx, dx)) {
+					
 //					값 교체
-					char c = cur.charAt(nPos);
+					char c = cur.charAt(dx);
 					String change = cur.replace(c, '.');
 					change = change.replace('0', c);
 					change = change.replace('.', '0');
@@ -80,8 +75,11 @@ public class Main {
 
 	}
 
-	static boolean check(int x, int y) {
-		return x >= 0 && x < 3 && y >= 0 && y < 3;
+	static boolean check(int idx, int dx) {
+	    if (dx < 0 || dx > 8) return false;
+	    if (idx % 3 == 0 && dx % 3 == 2) return false;
+	    if (idx % 3 == 2 && dx % 3 == 0) return false;
+	    return true;
 	}
 
 }
