@@ -1,99 +1,114 @@
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	static StringBuilder sb = new StringBuilder();
-	static int l, r, c;
-	static char[][][] arr;
-	static boolean[][][] visited;
-	static int[] dx = {-1, 0, 1, 0, 0, 0};
-	static int[] dy = {0, -1, 0, 1, 0, 0};
-	static int[] dz = {0, 0, 0, 0, 1, -1};
-	static ArrayDeque<int[]> q;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+    static StringBuilder sb = new StringBuilder();
+    static int l, r, c, result;
+    static int [] dx = {1, -1, 0, 0, 0, 0};
+    static int [] dy = {0, 0, 1, -1, 0, 0};
+    static int [] dz = {0, 0, 0, 0, 1, -1};
+    static char [][][] arr;
+    static ArrayDeque<Node> queue;
+    static boolean[][][] visited;
+    static Node start, end;
 
-	public static void main(String[] args) throws IOException {
+    static class Node {
+        int x, y, z, cnt;
 
-		while (true) {
+        Node(int z, int x, int y, int cnt) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.cnt = cnt;
+        }
+    }
 
-			st = new StringTokenizer(br.readLine());
-			l = Integer.parseInt(st.nextToken());
-			r = Integer.parseInt(st.nextToken());
-			c = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) throws IOException {
 
-			if (l == 0 && r == 0 && c == 0) {
-				System.out.println(sb.toString());
-				return;
-			}
+        while(true){
+            st = new StringTokenizer(br.readLine());
+            l = Integer.parseInt(st.nextToken());
+            r = Integer.parseInt(st.nextToken());
+            c = Integer.parseInt(st.nextToken());
 
-			arr = new char[l][r][c];
+            if(l == 0 && r == 0 && c == 0){
+                break;
+            }
 
-			int start_x = 0;
-			int start_y = 0;
-			int start_z = 0;
+            arr = new char[l][r][c];
+            result = 0;
 
-			for (int i = 0; i < l; i++) {
-				for (int j = 0; j < r; j++) {
-					String str = br.readLine();
-					for (int k = 0; k < c; k++) {
-						arr[i][j][k] = str.charAt(k);
+            for(int i = 0; i < l; i++){
+                for(int j = 0; j < r; j++){
+                    String str = br.readLine();
+                    for(int k = 0; k < c; k++){
+                        if(str.charAt(k) == 'S'){
+                            start = new Node(i, j, k, 0);
+                        }
 
-						if (arr[i][j][k] == 'S') {
-							start_z = i;
-							start_x = j;
-							start_y = k;
-							arr[i][j][k] = '.';
-						}
-					}
-				}
-				br.readLine();
-			}
+                        if(str.charAt(k) == 'E'){
+                            end = new Node(i, j, k, 0);
+                        }
 
-			bfs(start_z, start_x, start_y);
+                        arr[i][j][k] = str.charAt(k);
+                    }
+                }
+                br.readLine();
+            }
 
+            if(bfs(start.z, start.x, start.y)){
 
-		}
-	}
+            sb.append("Escaped in ").append(result).append(" minute(s).\n");
+            }else{
+                sb.append("Trapped!\n");
+            }
 
-	static void bfs(int start_z, int start_x, int start_y) {
-		visited = new boolean[l][r][c];
-		q = new ArrayDeque<>();
-		q.offer(new int[]{start_z, start_x, start_y, 0});
-		visited[start_z][start_x][start_y] = true;
+        }
 
-		while (!q.isEmpty()) {
-			int[] cur = q.poll();
-
-			if(arr[cur[0]][cur[1]][cur[2]] == 'E') {
-				sb.append("Escaped in ").append(cur[3]).append(" minute(s).\n");
-				return;
-			}
-
-
-			for (int i = 0; i < 6; i++) {
-				int z = cur[0] + dz[i];
-				int x = cur[1] + dx[i];
-				int y = cur[2] + dy[i];
-
-				if(check(z, x, y) && !visited[z][x][y] && arr[z][x][y] != '#') {
-
-					visited[z][x][y] = true;
-					q.offer(new int[]{z, x, y, cur[3] + 1});
+        System.out.println(sb);
 
 
-				}
-			}
-		}
-		sb.append("Trapped!\n");
+    }
 
-	}
+    static boolean bfs(int z, int x, int y){
+        queue = new ArrayDeque<>();
+        visited = new boolean[l][r][c];
+        queue.add(new Node(z, x, y, 0));
+        visited[z][x][y] = true;
 
-	static boolean check(int z, int x, int y) {
-		return z >= 0 && z < l && x >= 0 && x < r && y >= 0 && y < c;
-	}
+        while(!queue.isEmpty()){
+            Node cur = queue.poll();
+
+
+            if(end.z == cur.z && end.x == cur.x && end.y == cur.y){
+                result = cur.cnt;
+                return true;
+            }
+
+            for(int i = 0; i < 6; i++){
+                int az = cur.z + dz[i];
+                int ax = cur.x + dx[i];
+                int ay = cur.y + dy[i];
+
+                if(check(az, ax, ay) && !visited[az][ax][ay]){
+
+                    queue.add(new Node(az, ax, ay, cur.cnt + 1));
+                    visited[az][ax][ay] = true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    static boolean check(int az, int ax, int ay){
+        return az >= 0 && az < l && ax >= 0 && ax < r && ay >= 0 && ay < c && arr[az][ax][ay] != '#';
+    }
 }
